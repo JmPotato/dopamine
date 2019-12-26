@@ -23,4 +23,4 @@ app.run()
 # LICENSE
 Copyright © 2019 by JmPotato
 
-Under Apache License 2.0 : [http://www.apache.org/licenses/](http://www.apache.org/licenses/)
+Under [Apache License 2.0](http://www.apache.org/licenses/)
