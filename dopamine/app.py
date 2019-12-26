@@ -61,6 +61,9 @@ class Dopamine(pywsgi.WSGIServer):
             start_response('404 Not Found', header)
             html = b'Not Found'
 
+        if isinstance(html, str):
+            html = bytes(html, 'utf-8')
+
         return [html]
 
     def run(self):
