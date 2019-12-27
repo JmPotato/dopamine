@@ -42,9 +42,11 @@ class Dopamine(pywsgi.WSGIServer):
                 new_method_list = []
                 unknown_method_list = []
                 for method in method_list:
-                    if method in {'GET', 'HEAD', 'POST', 'PUT', 'DELETE',
-                                  'CONNECT', 'OPTIONS', 'TRACE', 'PATCH'}:
-                        new_method_list.append(method)
+                    if isinstance(method, str) and \
+                        method.upper() in {'GET', 'HEAD', 'POST', 'PUT',
+                                           'DELETE', 'CONNECT', 'OPTIONS',
+                                           'TRACE', 'PATCH'}:
+                        new_method_list.append(method.upper())
                     else:
                         unknown_method_list.append(method)
             if not new_method_list:
@@ -53,8 +55,8 @@ class Dopamine(pywsgi.WSGIServer):
                 else:
                     from .exceptions import RouterException
                     raise RouterException(
-                        "Unsupported HTTP method \'{0}\'"
-                        .format(''.join(unknown_method_list)))
+                        "Unsupported HTTP method '{0}'"
+                        .format(unknown_method_list[0]))
 
             self._router[new_url] = (new_method_list, f)
             return f

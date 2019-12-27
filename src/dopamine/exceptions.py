@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 class DopamineException(Exception):
-    def __init__(self, *args, **kwargs):
-        super(DopamineException, self).__init__()
+    pass
 
 
 class RouterException(DopamineException):
-    def __init__(self, *args, **kwargs):
-        super(DopamineException, self).__init__()
+    pass
 
 
 class HTTPException(Exception):
