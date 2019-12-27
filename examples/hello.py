@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-import sys
-sys.path.append('../..')
-
 from dopamine import Dopamine
 
 app = Dopamine(listener=('127.0.0.1', 5299))

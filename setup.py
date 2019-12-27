@@ -2,9 +2,9 @@
 import io
 import re
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
-with io.open("dopamine/__init__.py", "rt", encoding="utf8") as f:
+with io.open("src/dopamine/__init__.py", "rt", encoding="utf8") as f:
     version = re.search(r'__version__ = "(.*?)"', f.read()).group(1)
 
 setup(
@@ -16,7 +16,8 @@ setup(
     author_email='ghzpotato@gmail.com',
     license='Apache',
     url='https://ipotato.me',
-    packages=['dopamine'],
+    packages=find_packages("src"),
+    package_dir={"": "src"},
     install_requires=[
         'gevent'
     ],
