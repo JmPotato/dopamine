@@ -1,10 +1,10 @@
-![A pic of dopamine](https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Dopamine2.svg/1920px-Dopamine2.svg.png)
+![Dopamine](https://github.com/JmPotato/dopamine/blob/master/docs/imgs/1920px-dopamine.png)
 
 # Dopamine
 
 A simple and fast Python web framework which aims to help you build an app agilely.
 
-# Example
+## Example
 
 ```python
 from dopamine import Dopamine
@@ -20,7 +20,7 @@ def hello(request):
 app.run()
 ```
 
-# LICENSE
+## LICENSE
 Copyright © 2019 by JmPotato
 
 Under [Apache License 2.0](http://www.apache.org/licenses/)
