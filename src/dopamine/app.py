@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from gevent import monkey, pywsgi
 
-from .error import RouterException
+from .request import Request
 
 monkey.patch_all()
 
@@ -17,6 +17,12 @@ class Dopamine(pywsgi.WSGIServer):
         pywsgi.WSGIServer.__init__(self, listener=self.listener,
                                    application=self.application)
 
+    def __str__(self):
+        return "<class 'DopamineObeject'>"
+
+    def __repr__(self):
+        return 'DopamineObeject'
+
     def route(self, url, method_list):
         def decorator(f):
             # Check the url
@@ -26,17 +32,29 @@ class Dopamine(pywsgi.WSGIServer):
                 else:
                     new_url = url
             else:
-                raise RouterException
+                from .exceptions import RouterException
+                raise RouterException(
+                    "Illeage URL '{0}' for handler '{1}'"
+                    .format(url, f.__name__))
 
             # Check the method list
             if isinstance(method_list, list):
                 new_method_list = []
+                unknown_method_list = []
                 for method in method_list:
                     if method in {'GET', 'HEAD', 'POST', 'PUT', 'DELETE',
                                   'CONNECT', 'OPTIONS', 'TRACE', 'PATCH'}:
                         new_method_list.append(method)
+                    else:
+                        unknown_method_list.append(method)
             if not new_method_list:
-                raise RouterException
+                if not unknown_method_list:
+                    new_method_list = ['GET']
+                else:
+                    from .exceptions import RouterException
+                    raise RouterException(
+                        "Unsupported HTTP method \'{0}\'"
+                        .format(''.join(unknown_method_list)))
 
             self._router[new_url] = (new_method_list, f)
             return f
@@ -47,19 +65,19 @@ class Dopamine(pywsgi.WSGIServer):
         header = [
             ('Content-Type', 'text/html')
         ]
-        url_path = env['PATH_INFO']
-        if len(url_path) > 1 and url_path[-1] == '/':
-            url_path = url_path[:-1]
-        if url_path in self._router:
-            if env['REQUEST_METHOD'] in self._router[url_path][0]:
+        request = Request(env)
+        if request.path in self._router:
+            if request.method in self._router[request.path][0]:
                 start_response('200 OK', header)
-                html = self._router[url_path][1](env)
+                html = self._router[request.path][1](request)
             else:
-                start_response('405 Method Not Allowed', header)
-                html = b'Method Not Allowed'
+                from .exceptions import MethodNotAllowed
+                start_response(MethodNotAllowed.status, header)
+                html = bytes(MethodNotAllowed.description, 'utf-8')
         else:
-            start_response('404 Not Found', header)
-            html = b'Not Found'
+            from .exceptions import NotFound
+            start_response(NotFound.status, header)
+            html = bytes(NotFound.description, 'utf-8')
 
         if isinstance(html, str):
             html = bytes(html, 'utf-8')
