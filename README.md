@@ -2,7 +2,7 @@
 
 # Dopamine
 
-Dopamine is a simple and fast Python web framework which aims to help you build an app agilely. It's based on gevent's `pywsgi`, a pure-Python, gevent-friendly WSGI server. Benefiting from a high-level synchronous API on top of the `libev` or `libuv` event loop, dopamine could be fast to respond every HTTP request without the user do any extra work. Also, dopamine will stay in both easy-using and powerfuly to help you build some simple apps agilely.
+Dopamine is a simple and fast Python web framework which aims to help you build an app agilely. It's based on gevent's `pywsgi`, a pure-Python, gevent-friendly WSGI server. Benefiting from a high-level synchronous API on top of the `libev` or `libuv` event loop, dopamine could be fast to respond every HTTP request without the user to do any extra work. Also, dopamine will stay in both easy-using and powerfuly to help you build some simple apps agilely.
 
 ## Feature
 
