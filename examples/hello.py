@@ -5,7 +5,7 @@ app = Dopamine(listener=('127.0.0.1', 5299))
 
 
 @app.route('/', ['GET'])
-def hello(request):
+def hello(request, response):
     html = 'Hello, dopamine!<br>'
     html += 'Your host is {0}:{1}<br>'.format(
         request.remote_addr, request.remote_port)

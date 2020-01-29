@@ -2,6 +2,7 @@
 from gevent import monkey, pywsgi
 
 from .request import Request
+from .response import Response
 
 monkey.patch_all()
 
@@ -64,27 +65,25 @@ class Dopamine(pywsgi.WSGIServer):
         return decorator
 
     def application(self, env, start_response):
-        header = [
-            ('Content-Type', 'text/html')
-        ]
         request = Request(env)
+        response = Response(content_type='text/html')
         if request.path in self._router:
             if request.method in self._router[request.path][0]:
-                start_response('200 OK', header)
-                html = self._router[request.path][1](request)
+                response.body = self._router[request.path][1](
+                    request, response)
+                start_response(response.status, response.headers)
             else:
                 from .exceptions import MethodNotAllowed
-                start_response(MethodNotAllowed.status, header)
-                html = bytes(MethodNotAllowed.description, 'utf-8')
+                response.status = MethodNotAllowed.status
+                start_response(response.status, response.headers)
+                response.body = MethodNotAllowed.description
         else:
             from .exceptions import NotFound
-            start_response(NotFound.status, header)
-            html = bytes(NotFound.description, 'utf-8')
+            response.status = NotFound.status
+            response.body = NotFound.description
+            start_response(response.status, response.headers)
 
-        if isinstance(html, str):
-            html = bytes(html, 'utf-8')
-
-        return [html]
+        return [response.body]
 
     def run(self):
         self.serve_forever()
